@@ -4,9 +4,12 @@
 Vagrant::Config.run do |config|
     config.vm.box = "Ubuntu precise 64 VMWare"
     config.vm.box_url = "http://files.vagrantup.com/precise64_vmware.box"
-    
-    config.vm.define "es1" do |es1|
-        es1.vm.network :hostonly, "192.168.1.10"
+
+    count = 1
+    for i in 1..3    
+    ip = count + 10
+    config.vm.define "es#{i}" do |es1|
+        es1.vm.network :hostonly, "192.168.50.#{ip}"
         es1.vm.provision :puppet do |puppet|
             puppet.module_path = './setup/modules'
             puppet.manifests_path = './setup/manifests'
@@ -14,24 +17,5 @@ Vagrant::Config.run do |config|
             puppet.options = '--verbose --debug'
         end
     end
-
-    config.vm.define "es2" do |es2|
-        es2.vm.network :hostonly, "192.168.1.11"
-        es2.vm.provision :puppet do |puppet|
-            puppet.module_path = './setup/modules'
-            puppet.manifests_path = './setup/manifests'
-            puppet.manifest_file = 'default.pp'
-            puppet.options = '--verbose --debug'
-        end
-    end
-
-    config.vm.define "es3" do |es3|
-        es3.vm.network :hostonly, "192.168.1.12"
-        es3.vm.provision :puppet do |puppet|
-            puppet.module_path = './setup/modules'
-            puppet.manifests_path = './setup/manifests'
-            puppet.manifest_file = 'default.pp'
-            puppet.options = '--verbose --debug'
-        end
     end
 end 
